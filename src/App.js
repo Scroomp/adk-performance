@@ -1,10 +1,9 @@
-import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
 
 function App() {
   const [numbher, setNumbher] = React.useState(0);
-  const x = [0, 1];
+
   return (
     <div className="App">
       <header className="App-header">
