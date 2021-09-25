@@ -47,15 +47,16 @@ Exercise
   unitType: 'kg' | 'seconds' | 'inches'
   createdOn: Date
 } 
-ExerciseRecord
-{
-  id: string
-  input: number
-  userId: string (foreign key)
-  exerciseId: string (foreign key)
-  createdOn: Date
-}
 */
+// Record;
+// {
+//   id: string;
+//   input: number;
+//   userId: string;
+//   exerciseId: string;
+//   createdOn: Date;
+// }
+
 const user1 = {
   id: "u-001",
   role: "athlete",
@@ -76,15 +77,20 @@ const jerk = {
   name: "jerk",
   unitType: "kg",
 };
+const Sprint10Yard = {
+  id: "c-004",
+  name: "10 Yard Sprint",
+  unitType: "s",
+};
 
-const exercises = [snatch, clean, jerk];
+const exercises = [snatch, clean, jerk, Sprint10Yard];
 // const cleanRecord = {
 //   id: "cr-001",
 //   userId: "u-001",
 //   exercise: "c-001",
 //   input: 100,
 // };
-const records = [];
+
 // Athlete -> single data point entry
 // Coach -> multiple data point entry
 //       -> one user for multiple exercise types
@@ -101,7 +107,9 @@ const records = [];
 // - [ ] Display the list of records
 
 function App() {
-  const [numbher, setNumbher] = React.useState("");
+  const [menuState, setMenuState] = React.useState(exercises[0].id);
+  const [records, setRecords] = React.useState([]);
+
   return (
     <>
       <Navbar>
@@ -113,15 +121,44 @@ function App() {
         </NavItem>
       </Navbar>
       <div>
-        <p>Enter Your Record</p>
-        <input
-          onChange={function (event) {
-            setNumbher(event.target.value);
+        <p>Choose Exercise to Record</p>
+        <form
+          onSubmit={function (event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            console.log();
+            setRecords((records) => [
+              ...records,
+              Object.fromEntries(formData.entries()),
+            ]);
+            console.log(records);
+            event.target.reset();
           }}
-        />
-        {exercises.map((exercise) => (
-          <button style={{ display: "block" }}>{exercise.name}</button>
-        ))}
+        >
+          <select
+            name="exercise"
+            onChange={function (event) {
+              setMenuState(event.target.value);
+            }}
+          >
+            {exercises.map((exercise) => (
+              <option value={exercise.id}>{exercise.name}</option>
+            ))}
+          </select>
+          <input name="record" type="number" />
+          {exercises.find((exercise) => exercise.id === menuState)?.unitType}
+          {""}
+          <button className="submit-button" type="submit">
+            Submit
+          </button>
+        </form>
+      </div>
+      <div>
+        {records
+          .sort((a, b) => +b.record - +a.record)
+          .map((record) => (
+            <button> {record.record}</button>
+          ))}
       </div>
     </>
   );

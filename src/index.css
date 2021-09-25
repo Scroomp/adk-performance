@@ -32,6 +32,10 @@ a {
   text-decoration: none;
 }
 
+.submit-button {
+  margin-left: 10px;
+}
+
 .navbar {
   height: var(--nav-size);
   background-color: var(--bg);
