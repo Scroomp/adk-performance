@@ -135,7 +135,7 @@ const RecordEntry = () => {
             })
             .map((record) => (
               <li>
-                {record.name}, {record.record}, {record.exercise}
+                {record.name}, {record.record}
               </li>
             ))}
         </ul>
