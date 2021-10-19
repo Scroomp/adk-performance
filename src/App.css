@@ -28,6 +28,24 @@
   color: #61dafb;
 }
 
+.enterRecord {
+  color: #5a9eec;
+}
+.title {
+  color: #5a9eec;
+}
+.recordList {
+  color: #5a9eec;
+}
+
+.pageBottom {
+  background-color: #282c34;
+}
+
+.container {
+  background-color: #282c34;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
