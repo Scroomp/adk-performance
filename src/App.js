@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 //import "./RecordEntry.css";
 import Firebase from "firebase/compat/app";
 //import 'firebase/auth";
@@ -45,9 +45,27 @@ const Sprint5105 = {
 };
 
 const exercises = [Sprint10Yard, Sprint5105, snatch, clean, jerk];
+const ref = firebase.firestore().collection("records");
 
 const RecordEntry = () => {
-  const [menuState, setMenuState] = React.useState(exercises[0].id);
+  const [menuState, setMenuState] = React.useState(exercises[0].name);
+  const [menu2State, setMenu2State] = React.useState(exercises[0].name);
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    const unSubscribe = ref.onSnapshot((querySnapshot) => {
+      const items = [];
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        items.push(doc.data());
+      });
+      setRecords(items);
+    });
+    return () => {
+      unSubscribe();
+    };
+  }, []);
+
   const saveRecord = (event) => {
     event.preventDefault();
     const elementsArray = [...event.target.elements];
@@ -69,7 +87,9 @@ const RecordEntry = () => {
       <form onSubmit={saveRecord}>
         <select
           id="exercise"
+          value={menuState}
           placeholder="Select Exercise"
+          required
           onChange={function (event) {
             setMenuState(event.target.value);
           }}
@@ -78,12 +98,47 @@ const RecordEntry = () => {
             <option value={exercise.name}>{exercise.name}</option>
           ))}
         </select>
-        <input type="text" id="name" placeholder="Athlete Name"></input>
-        <input type="number" id="record" placeholder="Record"></input>
+        <input
+          required
+          type="text"
+          id="name"
+          placeholder="Athlete Name"
+        ></input>
+        <input
+          required
+          type="number"
+          id="record"
+          placeholder="Record"
+          step=".001"
+        ></input>
         <button>Submit Record"</button>
       </form>
       <div>
         <h1>Records</h1>
+        <select
+          id="exerciseRecord"
+          value={menu2State}
+          placeholder="Select Exercise"
+          onChange={function (event) {
+            setMenu2State(event.target.value);
+          }}
+        >
+          {exercises.map((exercise) => (
+            <option value={exercise.name}>{exercise.name}</option>
+          ))}
+        </select>
+
+        <ul>
+          {records
+            .filter((record) => {
+              return record.exercise === menu2State;
+            })
+            .map((record) => (
+              <li>
+                {record.name}, {record.record}, {record.exercise}
+              </li>
+            ))}
+        </ul>
       </div>
     </div>
   );
